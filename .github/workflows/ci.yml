@@ -36,3 +36,16 @@ jobs:
 
       - name: Build Docker image
         run: docker build -t cpsy350-ci:latest .
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        if: github.event_name == 'push'
+        run: |
+          docker build -t kfenner/cpsy350-ci:latest .
+          docker push kfenner/cpsy350-ci:latest
+
